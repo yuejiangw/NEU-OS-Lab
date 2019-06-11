@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-//#include <error.h>
+#include <error.h>
 #include <wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -38,7 +38,7 @@ int main()
 	printf("* access series numbers:");
 	for(i = 0; i < total_instruction; i++)
 	{	
-		Acess_Series[i] = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));//[1,20]
+		Acess_Series[i] = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));//[1,10]
 		printf("%d ",Acess_Series[i]);	
 	}
 	printf("\n");
