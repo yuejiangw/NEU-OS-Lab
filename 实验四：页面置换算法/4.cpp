@@ -197,7 +197,7 @@ int main()
 	}
 	else if(pid == 0)/* subprocess */
 	{
-		printf("* subprocess2 %d for LRU!\n",gtid = getpid());
+		printf("* subprocess2 %d for LRU!\n", gtid = getpid());
 
 		while(access_index < total_instruction)
 		{
@@ -240,29 +240,29 @@ int main()
 					}
 				}
 
-				if(i==frame_num)/* full */
+				if(i == frame_num)/* full */
 				{
-					for(i=0;i<frame_num - 1;i++)	
+					for(i = 0; i < frame_num - 1; i++)	// 栈底元素出栈，栈顶压入新元素
 						M_Frame[i].page_no = M_Frame[i + 1].page_no;
 					M_Frame[frame_num - 1].page_no = Acess_Series[access_index];
 				}
 			}
 
-			for(i=frame_num-1;i>=0;i--)/* print the state of frames */
+			for(i = frame_num - 1; i >= 0; i--)/* print the state of frames */
 			{
 				if(M_Frame[i].flag == UNUSED)
 					printf("* M_Frame[%d]:  \n",i);
 				else
-					printf("* M_Frame[%d]:%d\n",i,M_Frame[i].page_no);
+					printf("* M_Frame[%d]: %d\n",i,M_Frame[i].page_no);
 			}
 			printf("--------------\n");
-			success_flag=false;
+			success_flag = false;
 			access_index++;
 		}
 
-		absence_rate=diseffect/total_instruction;
-		success_rate=1-absence_rate;
-		printf("* subprocess2 %d successful for LRU [4]:absence_rate=%f,sbIndex=%f\n",gtid,absence_rate,success_rate);
+		absence_rate = diseffect / total_instruction;
+		success_rate = 1 - absence_rate;
+		printf("* subprocess2 %d successful for LRU [4]:absence_rate = %f,sbIndex = %f\n", gtid, absence_rate, success_rate);
 		exit(0);
 	}
 
