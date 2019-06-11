@@ -29,6 +29,7 @@ float success_rate = 0.0;	      		 /* pages success Index of access --success_ra
 int Acess_Series[total_instruction]; 	 /* the pages series for access of memory */
 one_frame M_Frame[frame_num];  	     	 /* memory access series */
 one_frame M_Frame_FIFO[frame_num_FIFO];  /* memory access series FIFO*/
+int Belady[total_instruction] = {2, 7, 2, 3, 6, 3, 10, 7, 4, 5, 2, 6, 5, 10, 7, 6, 8, 5, 8, 10}; // Belady
 
 void init()
 {
@@ -38,7 +39,7 @@ void init()
 	for(i = 0; i < total_instruction; i++)
 	{	
 		Acess_Series[i] = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));//[1,10]
-		printf("%d ",Acess_Series[i]);	
+		printf("%d ", Acess_Series[i]);	
 	}
 	printf("\n");
 	/***********initialize data structure M_Frame***********/
@@ -49,6 +50,27 @@ void init()
 	}
 
 	for(i=0;i<frame_num_FIFO;i++)
+	{	
+		M_Frame[i].page_no = 0;
+		M_Frame[i].flag = UNUSED;
+	}
+}
+
+void init_belady()
+{
+	for(i = 0; i < total_instruction; i++)
+	{
+		Acess_Series[i] = Belady[i];
+		printf("%d ", Acess_Series[i]);	
+	}
+	printf("\n");
+	for(i = 0; i < frame_num; i++)
+	{	
+		M_Frame[i].page_no = 0;
+		M_Frame[i].flag = UNUSED;
+	}
+
+	for(i = 0; i < frame_num_FIFO; i++)
 	{	
 		M_Frame[i].page_no = 0;
 		M_Frame[i].flag = UNUSED;
@@ -208,12 +230,13 @@ void subprocess_LRU()
 
 	reid = wait(NULL);
 	if(reid == -1)
-		printf("* call subprocess 2 failed!\n");
+		printf("* call subprocess_LRU failed!\n");
 }
 
 int main()
 {
-    init();
+	//init();
+    init_belady();
     subprocess_FIFO(frame_num);
     subprocess_FIFO(frame_num_FIFO);
     subprocess_LRU();

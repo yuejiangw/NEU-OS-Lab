@@ -24,24 +24,43 @@ typedef struct oneframe {
 int main()
 {
 	/***********initialize variable***********/
-	int i,j,pid,gtid,reid;
-	int access_index = 0;		       		 /* the index process access Acess_Series */
-	int success_flag = false;	       		 /* value is true if page exists else false */
-	float diseffect = 0.0;		       		 /* pages absence times */
-	float absence_rate = 0.0;	      		 /* pages absence Index of access --absence_rate=diseffect/total_instruction */
-	float success_rate = 0.0;	      		 /* pages success Index of access --success_rate=1-absence_rate */
-    int Acess_Series[total_instruction]; 	 /* the pages series for access of memory */
-    one_frame M_Frame[frame_num];  	     	 /* memory access series */
-	one_frame M_Frame_FIFO[frame_num_FIFO];  /* memory access series FIFO*/
+	int i, j, pid, gtid, reid;
+	int access_index = 0;		       		 // the index process access Access_Series
+	int success_flag = false;	       		 // value is true if page exists else false 
+	float diseffect = 0.0;		       		 // pages absence times 
+	float absence_rate = 0.0;	      		 // pages absence Index of access --absence_rate=diseffect/total_instruction 
+	float success_rate = 0.0;	      		 // pages success Index of access --success_rate=1-absence_rate 
+    int Access_Series[total_instruction]; 	 // the pages series for access of memory 
+    one_frame M_Frame[frame_num];  	     	 // memory access series 
+	one_frame M_Frame_FIFO[frame_num_FIFO];  // memory access series FIFO
+	int Belady[total_instruction] = {2, 7, 2, 3, 6, 3, 10, 7, 4, 5, 2, 6, 5, 10, 7, 6, 8, 5, 8, 10}; // Belady
 	/***********initialize memory access series***********/
-	srand((int)time(0));		       		 /* seed for random number */
-	printf("* access series numbers:");
-	for(i = 0; i < total_instruction; i++)
-	{	
-		Acess_Series[i] = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));//[1,10]
-		printf("%d ",Acess_Series[i]);	
+	printf("Do you want to see Belady 100%? (1-no  2-yes)\n");
+	do{
+		printf("your choice: ");
+		scanf("%d", &i);
+	}while(i != 1 && i != 2);
+	if(i == 1)	// 普通随机数
+	{
+		srand((int)time(0));		       		 // seed for random number
+		printf("* access series numbers:");
+		for(i = 0; i < total_instruction; i++)
+		{	
+			Access_Series[i] = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));//[1,10]
+			printf("%d ",Access_Series[i]);	
+		}
+		printf("\n");
 	}
-	printf("\n");
+	else if(i == 2)	// 特定Belady序列
+	{
+		/***********initialize belady***************************/
+		for(i = 0; i < total_instruction; i++)
+		{
+			Access_Series[i] = Belady[i];
+			printf("%d ", Access_Series[i]);	
+		}
+		printf("\n");
+	}
 	/***********initialize data structure M_Frame***********/
     for(i = 0; i < frame_num; i++)
 	{	
@@ -54,27 +73,27 @@ int main()
 		M_Frame[i].page_no = 0;
 		M_Frame[i].flag = UNUSED;
 	}
-	/**********************subprocess1**********************/
+	/**********************subprocess_FIFO**********************/
 	pid = fork();
 
-	if(pid == -1)		/* create process error */
+	if(pid == -1)		// create process error 
 	{
-		printf("* creat subprocess 1 failed!\n");
+		printf("* creat subprocess_FIFO failed!\n");
 		exit(0);
 	}
-	else if(pid == 0)	/* subprocess */
+	else if(pid == 0)	// subprocess 
 	{
-		printf("* subprocess1 %d for FIFO!\n", gtid = getpid());
+		printf("* subprocess_FIFO %d\n", gtid = getpid());
 
 		while(access_index < total_instruction)
 		{
-			for(i = 0; i < frame_num; i++)	/* check if page exists in memory or not */
+			for(i = 0; i < frame_num; i++)		// check if page exists in memory or not 
 			{	
 				if (M_Frame[i].flag == USED)
 				{
-					if(M_Frame[i].page_no == Acess_Series[access_index])
+					if(M_Frame[i].page_no == Access_Series[access_index])
 					{
-						success_flag = true;/* page exists in memory */
+						success_flag = true;	// page exists in memory
 						break;
 					}
 				}
@@ -82,25 +101,25 @@ int main()
 					break;
 			}
 
-			if(!success_flag) /* page absent/page not exists in memory */
+			if(!success_flag)	// page absent/page not exists in memory 
 			{
 				diseffect += 1.0;
 
-				for(i = 0; i < frame_num; i++)/* check if frames are full or not */
+				for(i = 0; i < frame_num; i++)		// check if frames are full or not 
 				{	
-					if(M_Frame[i].flag == UNUSED)/* not full */
+					if(M_Frame[i].flag == UNUSED)	// not full 
 					{
 						M_Frame[i].flag = USED;
-						M_Frame[i].page_no = Acess_Series[access_index];
+						M_Frame[i].page_no = Access_Series[access_index];
 						break;
 					}
 				}
 
-				if(i == frame_num)/* full */
+				if(i == frame_num)	// full 
 				{
 					for(i = 0; i < frame_num - 1; i++)	
 						M_Frame[i].page_no = M_Frame[i + 1].page_no;			// 栈中元素依次前移
-					M_Frame[frame_num - 1].page_no = Acess_Series[access_index];// 新元素在栈顶
+					M_Frame[frame_num - 1].page_no = Access_Series[access_index];// 新元素在栈顶
 				}
 			}
 			success_flag = false;
@@ -109,7 +128,8 @@ int main()
 
 		absence_rate = diseffect / total_instruction;	// 缺页率
 		success_rate = 1 - absence_rate;
-		printf("* subprocess1 %d successful for FIFO [4]:absence_rate=%f,sbIndex=%f\n\n",gtid,absence_rate,success_rate);
+		printf("* subprocess_FIFO %d successful [%d]:absence_rate=%f, sbIndex=%f\n\n",
+			gtid, frame_num, absence_rate, success_rate);
 
 		access_index = 0;
 		success_flag = false;
@@ -119,28 +139,28 @@ int main()
 
 	reid = wait(NULL);
 	if(reid == -1)
-		printf("* call subprocess 1 failed!\n");
-	/**********************subprocess3**********************/
+		printf("* call subprocess_FIFO failed!\n");
+	/**********************subprocess_FIFO_Belady**********************/
 	pid = fork();
 
-	if(pid == -1)    /* create process error */
+	if(pid == -1)    // create process error 
 	{
-		printf("* creat subprocess 3 failed!\n");
+		printf("* creat subprocess_FIFO failed!\n");
 		exit(0);
 	}
-	else if(pid == 0)/* subprocess */
+	else if(pid == 0)	// subprocess 
 	{
-		printf("* subprocess3 %d for FIFO!\n", gtid = getpid());
+		printf("* subprocess_FIFO %d\n", gtid = getpid());
 
 		while(access_index < total_instruction)
 		{
-			for(i = 0; i < frame_num_FIFO; i++)/* check if page exists in memory or not */
+			for(i = 0; i < frame_num_FIFO; i++)	// check if page exists in memory or not 
 			{	
 				if(M_Frame_FIFO[i].flag == USED)
 				{
-					if(M_Frame_FIFO[i].page_no == Acess_Series[access_index])
+					if(M_Frame_FIFO[i].page_no == Access_Series[access_index])
 					{
-						success_flag = true;/* page exists in memory */
+						success_flag = true;	// page exists in memory 
 						break;
 					}
 				}
@@ -148,25 +168,25 @@ int main()
 					break;
 			}
 
-			if(!success_flag)/* page absent/page not exists in memory */
+			if(!success_flag)	// page absent/page not exists in memory 
 			{
-				diseffect+=1.0;
+				diseffect += 1.0;
 
-				for(i=0;i<frame_num_FIFO;i++)/* check if frames are full or not */
+				for(i = 0; i < frame_num_FIFO; i++)	// check if frames are full or not 
 				{	
-					if(M_Frame_FIFO[i].flag == UNUSED)/* not full */
+					if(M_Frame_FIFO[i].flag == UNUSED)	// not full 
 					{
 						M_Frame_FIFO[i].flag = USED;
-						M_Frame_FIFO[i].page_no = Acess_Series[access_index];
+						M_Frame_FIFO[i].page_no = Access_Series[access_index];
 						break;
 					}
 				}
 
-				if(i==frame_num_FIFO)/* full */
+				if(i == frame_num_FIFO)	// full 
 				{
 					for(i=0;i<frame_num_FIFO - 1;i++)	
 						M_Frame_FIFO[i].page_no = M_Frame_FIFO[i + 1].page_no;
-					M_Frame_FIFO[frame_num_FIFO - 1].page_no = Acess_Series[access_index];
+					M_Frame_FIFO[frame_num_FIFO - 1].page_no = Access_Series[access_index];
 				}
 			}
 
@@ -176,7 +196,8 @@ int main()
 
 		absence_rate=diseffect/total_instruction;
 		success_rate=1-absence_rate;
-		printf("* subprocess3 %d successful for FIFO [6]:absence_rate=%f,sbIndex=%f\n\n",gtid,absence_rate,success_rate);
+		printf("* subprocess_FIFO %d successful [%d]: absence_rate=%f, sbIndex=%f\n\n",
+			gtid, frame_num_FIFO, absence_rate, success_rate);
 
 		access_index = 0;
 		success_flag = false;
@@ -186,37 +207,37 @@ int main()
 
 	reid = wait(NULL);
 	if(reid == -1)
-		printf("* call subprocess 3 failed!\n");
-	/**********************subprocess2**********************/
+		printf("* call subprocess_FIFO failed!\n");
+	/**********************subprocess_LRU**********************/
 	pid = fork();
 
-	if(pid == -1)    /* create process error */
+	if(pid == -1)    	// create process error 
 	{
-		printf("* creat subprocess 2 failed!\n");
+		printf("* creat subprocess_LRU failed!\n");
 		exit(0);
 	}
-	else if(pid == 0)/* subprocess */
+	else if(pid == 0)	// subprocess
 	{
-		printf("* subprocess2 %d for LRU!\n", gtid = getpid());
+		printf("* subprocess_LRU %d\n", gtid = getpid());
 
 		while(access_index < total_instruction)
 		{
-			for(i = 0; i < frame_num; i++)/* check if page exists in memory or not */
+			for(i = 0; i < frame_num; i++)	// check if page exists in memory or not 
 			{	
 				if (M_Frame[i].flag == USED)
 				{
-					if (M_Frame[i].page_no == Acess_Series[access_index])
+					if (M_Frame[i].page_no == Access_Series[access_index])
 					{
-						success_flag = true;	/* page exists in memory */
+						success_flag = true;	// page exists in memory 
 
-						for(j = i; j < frame_num - 1; j++)/* reanrange the sequence of page in frames */
+						for(j = i; j < frame_num - 1; j++)	// reanrange the sequence of page in frames 
 						{
 							if (M_Frame[j + 1].flag == UNUSED)
 								break;
 							else
 							{
 								M_Frame[j].page_no = M_Frame[j + 1].page_no;
-								M_Frame[j + 1].page_no = Acess_Series[access_index];
+								M_Frame[j + 1].page_no = Access_Series[access_index];
 							}
 						}
 						break;
@@ -226,29 +247,29 @@ int main()
 					break;	
 			}
 
-			if(!success_flag)	/* page absent/page not exists in memory */
+			if(!success_flag)	// page absent/page not exists in memory 
 			{
 				diseffect += 1.0;
 
-				for(i = 0; i < frame_num; i++)		/* check if frames are full or not */
+				for(i = 0; i < frame_num; i++)		// check if frames are full or not 
 				{	
-					if(M_Frame[i].flag == UNUSED)	/* not full */
+					if(M_Frame[i].flag == UNUSED)	// not full 
 					{
 						M_Frame[i].flag = USED;
-						M_Frame[i].page_no = Acess_Series[access_index];
+						M_Frame[i].page_no = Access_Series[access_index];
 						break;
 					}
 				}
 
-				if(i == frame_num)/* full */
+				if(i == frame_num)	// full 
 				{
 					for(i = 0; i < frame_num - 1; i++)	// 栈底元素出栈，栈顶压入新元素
 						M_Frame[i].page_no = M_Frame[i + 1].page_no;
-					M_Frame[frame_num - 1].page_no = Acess_Series[access_index];
+					M_Frame[frame_num - 1].page_no = Access_Series[access_index];
 				}
 			}
 
-			for(i = frame_num - 1; i >= 0; i--)/* print the state of frames */
+			for(i = frame_num - 1; i >= 0; i--)	// print the state of frames 
 			{
 				if(M_Frame[i].flag == UNUSED)
 					printf("* M_Frame[%d]:  \n",i);
@@ -262,13 +283,14 @@ int main()
 
 		absence_rate = diseffect / total_instruction;
 		success_rate = 1 - absence_rate;
-		printf("* subprocess2 %d successful for LRU [4]:absence_rate = %f,sbIndex = %f\n", gtid, absence_rate, success_rate);
+		printf("* subprocess_LRU %d successful [%d]: absence_rate=%f, sbIndex=%f\n", 
+			gtid, frame_num, absence_rate, success_rate);
 		exit(0);
 	}
 
 	reid = wait(NULL);
 	if(reid == -1)
-		printf("* call subprocess 2 failed!\n");
+		printf("* call subprocess_LRU failed!\n");
 
 	return 0;
 }
