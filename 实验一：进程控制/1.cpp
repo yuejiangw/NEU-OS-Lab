@@ -1,4 +1,5 @@
 #include<iostream>
+
 using namespace std;
  
 typedef struct pcb{
@@ -6,7 +7,7 @@ typedef struct pcb{
     struct pcb *next;
 }pcb;
  
-pcb *ready,*run,*block;
+pcb *ready, *run, *block;
  
 pcb* cre()//创建带头结点的ready队列
 {
