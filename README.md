@@ -1,8 +1,9 @@
-# 操作系统四次实验的代码
+# Source code of the school's OS experimentation 
 
-学校操作系统的实验课代码，分别是：
+Includes：
 
-* 实验一：三状态模型
-* 实验二：生产者消费者模拟
-* 实验三：管道通信与父子进程
-* 实验四：页式存储管理
+* No.1：Three-state model
+* No.2：Producer and consumer problems
+* No.3：Pipeline communication and process synchronization
+* No.4：Paged memory management
+* The introduction of the experimental contents
