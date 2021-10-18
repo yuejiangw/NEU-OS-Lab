@@ -2,8 +2,9 @@
 
 Includes：
 
-* No.1：Three-state model
+* No.1：Three-state process model
 * No.2：Producer and consumer problems
 * No.3：Pipeline communication and process synchronization
 * No.4：Paged memory management
-* The introduction of the experimental contents
+ 
+The introduction of the experimental contents is attached to the repository.
