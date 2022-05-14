@@ -1,10 +1,10 @@
-# Source code of the school's OS experimentation 
+# 东北大学操作系统四次上机实验源码 
 
-Includes：
 
-* No.1：Three-state process model
-* No.2：Producer and consumer problems
-* No.3：Pipeline communication and process synchronization
-* No.4：Paged memory management
- 
-The introduction of the experimental contents is attached to the repository.
+* 实验一：三状态转换
+* 实验二：生产者消费者模型
+* 实验三：管道通信与进程同步
+* 实验四：页内存管理
+
+实验内容说明请参考PPT
+
