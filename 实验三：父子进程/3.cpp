@@ -7,8 +7,8 @@
 #include <wait.h>
 #include <error.h>
 
-#define F_ULOCK 0 //解锁
-#define F_LOCK 1  //互斥锁定区域
+#define F_ULOCK 0 // 解锁
+#define F_LOCK 1  // 互斥锁定区域
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
 	pid_t pid, reid, gtid;
 	char outpipe[100], father_str[100];
 
-	//创建管道, fd[0]读管道，fd[1]写管道
+	// 创建管道, fd[0]读管道，fd[1]写管道
 	result = pipe(fd);
 	if (result == -1)
 	{

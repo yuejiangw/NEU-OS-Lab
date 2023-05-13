@@ -12,7 +12,7 @@ typedef struct pcb
 
 pcb *ready, *run, *block;
 
-//创建带头结点的ready队列
+// 创建带头结点的ready队列
 pcb *create()
 {
     pcb *head = new pcb;
@@ -32,7 +32,7 @@ pcb *create()
     return head;
 }
 
-//插入结点
+// 插入结点
 void insert(pcb *head, pcb *node)
 {
     pcb *p = head;
