@@ -35,7 +35,7 @@ void init()
 }
 
 // 查找空位
-int findEmpty(vector<int> &v, int len)
+int findEmpty(vector<int>& v, int len)
 {
 	for (int i = 0; i < len; ++i)
 	{
@@ -48,7 +48,7 @@ int findEmpty(vector<int> &v, int len)
 }
 
 // 查找脏位
-int findDirty(vector<int> &v, int len)
+int findDirty(vector<int>& v, int len)
 {
 	for (int i = 0; i < len; ++i)
 	{
@@ -61,7 +61,7 @@ int findDirty(vector<int> &v, int len)
 }
 
 // 缓冲区是否满
-bool isFull(vector<int> &v, int len)
+bool isFull(vector<int>& v, int len)
 {
 	for (int i = 0; i < len; i++)
 	{
@@ -74,7 +74,7 @@ bool isFull(vector<int> &v, int len)
 }
 
 // 缓冲区是否空
-bool isEmpty(vector<int> &v, int len)
+bool isEmpty(vector<int>& v, int len)
 {
 	for (int i = 0; i < len; i++)
 	{
@@ -117,7 +117,7 @@ void show()
 	if (producer)
 	{
 		cout << "\nPRODUCER wait : " << producer << "\n"
-			 << "pQueue: ";
+			<< "pQueue: ";
 		showQueue(pQueue);
 	}
 	else

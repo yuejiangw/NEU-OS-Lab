@@ -40,8 +40,8 @@ int main()
 	int Access_Series[total_instruction];															 // random number sequence
 	one_frame M_Frame[frame_num];																	 // memory access sequence
 	one_frame M_Frame_FIFO[frame_num_FIFO];															 // memory access sequence FIFO
-	int Belady[total_instruction] = {2, 7, 2, 3, 6, 3, 10, 7, 4, 5, 2, 6, 5, 10, 7, 6, 8, 5, 8, 10}; // Belady
-	int Equal[total_instruction] = {5, 1, 10, 2, 5, 1, 2, 2, 1, 10, 10, 6, 7, 2, 8, 5, 4, 8, 8, 8};
+	int Belady[total_instruction] = { 2, 7, 2, 3, 6, 3, 10, 7, 4, 5, 2, 6, 5, 10, 7, 6, 8, 5, 8, 10 }; // Belady
+	int Equal[total_instruction] = { 5, 1, 10, 2, 5, 1, 2, 2, 1, 10, 10, 6, 7, 2, 8, 5, 4, 8, 8, 8 };
 
 	/***********initialize memory access series***********/
 	printf("Do you want to see Belady? (1-yes  2-no)\n");
@@ -253,7 +253,7 @@ int main()
 		absence_rate = diseffect / total_instruction;
 		success_rate = 1 - absence_rate;
 		printf("* subprocess_FIFO %d successful [%d]: absence_rate=%f, success_rate=%f\n\n",
-			   gtid, frame_num_FIFO, absence_rate, success_rate);
+			gtid, frame_num_FIFO, absence_rate, success_rate);
 
 		access_index = 0;
 		success_flag = false;
@@ -340,7 +340,7 @@ int main()
 		absence_rate = diseffect / total_instruction;
 		success_rate = 1 - absence_rate;
 		printf("* subprocess_LRU %d successful [%d]: absence_rate=%f, success_rate=%f\n",
-			   gtid, frame_num, absence_rate, success_rate);
+			gtid, frame_num, absence_rate, success_rate);
 		exit(0);
 	}
 

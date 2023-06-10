@@ -7,23 +7,23 @@ using std::endl;
 typedef struct pcb
 {
     int id;
-    struct pcb *next;
+    struct pcb* next;
 } pcb;
 
-pcb *ready, *run, *block;
+pcb* ready, * run, * block;
 
 // 创建带头结点的ready队列
-pcb *create()
+pcb* create()
 {
-    pcb *head = new pcb;
+    pcb* head = new pcb;
     head->next = NULL;
-    pcb *q = head;
+    pcb* q = head;
     int n;
     cout << "输入进程数:\n";
     cin >> n;
     for (int i = 0; i < n; i++)
     {
-        pcb *p = new pcb;
+        pcb* p = new pcb;
         cin >> p->id;
         p->next = NULL;
         q->next = p;
@@ -33,23 +33,23 @@ pcb *create()
 }
 
 // 插入结点
-void insert(pcb *head, pcb *node)
+void insert(pcb* head, pcb* node)
 {
-    pcb *p = head;
+    pcb* p = head;
     while (p->next)
     {
         p = p->next;
     }
-    pcb *n = new pcb;
+    pcb* n = new pcb;
     n->id = node->id;
     p->next = n;
     n->next = NULL;
 }
 
 // 删除结点
-void del(pcb *head)
+void del(pcb* head)
 {
-    pcb *p = head->next;
+    pcb* p = head->next;
     if (p)
     {
         head->next = head->next->next;
@@ -60,7 +60,7 @@ void del(pcb *head)
 // 展示各个状态的进程
 void show()
 {
-    pcb *p;
+    pcb* p;
 
     p = ready->next;
     cout << "ready:\t";
