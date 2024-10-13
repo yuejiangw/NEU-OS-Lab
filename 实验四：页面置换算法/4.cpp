@@ -29,14 +29,14 @@ int main() {
 
 	/*********** initialize variable ***********/
 	int i, j, pid, gtid, reid;
-	int access_index = 0;																			 // the index of Access_Series
-	int success_flag = false;																		 // value is true if page exists
-	float diseffect = 0.0;																			 // pages absence counts
-	float absence_rate = 0.0;																		 // absence_rate = diseffect / total_instruction
-	float success_rate = 0.0;																		 // success_rate = 1 - absence_rate
-	int Access_Series[total_instruction];															 // random number sequence
-	one_frame M_Frame[frame_num];																	 // memory access sequence
-	one_frame M_Frame_FIFO[frame_num_FIFO];															 // memory access sequence FIFO
+	int access_index = 0;		            // the index of Access_Series
+	int success_flag = false;	            // value is true if page exists
+	float diseffect = 0.0;		            // pages absence counts
+	float absence_rate = 0.0;	            // absence_rate = diseffect / total_instruction
+	float success_rate = 0.0;	            // success_rate = 1 - absence_rate
+	int Access_Series[total_instruction];	// random number sequence
+	one_frame M_Frame[frame_num];			// memory access sequence
+	one_frame M_Frame_FIFO[frame_num_FIFO];	// memory access sequence FIFO
 	int Belady[total_instruction] = { 2, 7, 2, 3, 6, 3, 10, 7, 4, 5, 2, 6, 5, 10, 7, 6, 8, 5, 8, 10 }; // Belady
 	int Equal[total_instruction] = { 5, 1, 10, 2, 5, 1, 2, 2, 1, 10, 10, 6, 7, 2, 8, 5, 4, 8, 8, 8 };
 
